@@ -4,11 +4,12 @@ Have fun tracking your project's stargazers.
 
 <img src="cover.png">
 
-### Inspiration
+## Inspiration
 
 I saw [this](https://www.codementor.io/johnnyb/the-map-of-my-mentees-7q7aqrktp) post at Codementor by [Ionică Bizău](https://github.com/IonicaBizau) which lead me to his [project](https://github.com/IonicaBizau/my-mentees).
 
-### What have I used?
+
+## What have I used?
 
 **Python**
   - [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) & [GitHub's API](https://developer.github.com/v3/users/) to get user data.
@@ -17,7 +18,8 @@ I saw [this](https://www.codementor.io/johnnyb/the-map-of-my-mentees-7q7aqrktp) 
 **Javascript**
   - [Datamaps](http://datamaps.github.io/) and [d3.js](https://d3js.org/) to build the map.
 
-### See the World Map showing your project's stargazers in just 2 Steps.
+
+## See the World Map showing your project's stargazers in just 2 Steps.
 
   - **Step 1**
 
