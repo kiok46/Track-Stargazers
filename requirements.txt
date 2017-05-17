@@ -1,0 +1,2 @@
+BeautifulSoup4==4.6.0
+geocoder==1.22.5
