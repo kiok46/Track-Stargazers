@@ -1,0 +1,24 @@
+{
+  "name": "track-your-stargazers",
+  "description": "Track Your Stargazers",
+  "keywords": [
+    "Track",
+    "Your",
+    "Stargazers"
+  ],
+  "license": "MIT",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kuldeep Grewal <kuldeepbb.grewal@gmail.com> (http://kuldeepgrewal.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kiok46/Track-Your-Stargazers.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kiok46/Track-Your-Stargazers/issues"
+  },
+  "homepage": "https://github.com/kiok46/Track-Your-Stargazers#readme",
+}
