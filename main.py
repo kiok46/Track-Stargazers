@@ -196,11 +196,10 @@ if __name__ == "__main__":
     to get the user data, else it will use the scraper.
     """
     import sys
-    url = sys.argv[1]
-    number_of_chunks = int(sys.argv[2])
-    number_of_threads = int(sys.argv[3])
-    use_api = int(sys.argv[4])
-    read_from_stargazer_json = int(sys.argv[5])
+    url = str(sys.argv[1])
+    number_of_threads = int(sys.argv[2])
+    use_api = int(sys.argv[3])
+    read_from_stargazer_json = int(sys.argv[4])
 
     star = "/stargazers?page={}"
 
@@ -216,9 +215,9 @@ if __name__ == "__main__":
             json.dump(stargazers, outfile, indent=4)
         outfile.close()
 
-    chunked_data = chunk_stargazers(stargazers, number_of_chunks)
+    chunked_data = chunk_stargazers(stargazers, number_of_threads)
     if chunked_data:
-        print ("Made {} chunks of entire user set.".format(number_of_chunks))
+        print ("Made {} chunks of entire user set.".format(number_of_threads))
         print ("Part 1/2 complete.")
         print ("Working on collecting user data ....")
 
