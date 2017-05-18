@@ -1,7 +1,7 @@
 import urllib.request
 import json
 import datetime
-
+import os
 
 def main(number_of_files):
     """
@@ -15,7 +15,6 @@ def main(number_of_files):
         This is optional, if you want to delete your entire data then
         call this method before main ends.
         """
-        import os
         for i in range(number_of_files):
             try:
                 os.remove("jsons/data_{}.json".format(i))
@@ -24,6 +23,9 @@ def main(number_of_files):
 
     for i in range(number_of_files):
         try:
+            if not os.path.exists("jsons"):
+                os.makedirs("jsons")
+                print ("hehe")
             with open("jsons/data_{}.json".format(i), "r") as datafile:
                 data = json.load(datafile)
             for d in data["users"]:
@@ -36,8 +38,8 @@ def main(number_of_files):
                     all_users.append(l)
 
             datafile.close()
-        except:
-            print ("error")
+        except Exception as e:
+            print (e)
             pass
 
     year = str(datetime.datetime.now().year)

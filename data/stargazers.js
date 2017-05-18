@@ -1,1 +1,1 @@
-var DATA = { users:[{'user': 7335120, 'country': 'India'}, {'user': 25337098, 'country': 'China'}, {'user': 5596273, 'country': 'India'}, {'user': 7942146, 'country': 'United States'}, {'user': 738052, 'country': 'Netherlands'}, {'user': 4523848, 'country': 'France'}, {'user': 213371, 'country': 'United States'}, {'user': 7171587, 'country': 'Russia'}], created_at: new Date(2017, 5, 17) };
+var DATA = { users:[], created_at: new Date(2017, 5, 18) };
