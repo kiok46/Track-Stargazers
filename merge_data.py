@@ -25,7 +25,6 @@ def main(number_of_files):
         try:
             if not os.path.exists("jsons"):
                 os.makedirs("jsons")
-                print ("hehe")
             with open("jsons/data_{}.json".format(i), "r") as datafile:
                 data = json.load(datafile)
             for d in data["users"]:
