@@ -12,7 +12,7 @@ I saw [this](https://www.codementor.io/johnnyb/the-map-of-my-mentees-7q7aqrktp) 
 
 **Python**
   - [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) & [GitHub's API](https://developer.github.com/v3/users/) to get user data.
-  - [Geocoder](http://geocoder.readthedocs.io/) to get country from location.
+  - [Geopy](https://geopy.readthedocs.io/) to get country from location.
 
 **Javascript**
   - [Datamaps](http://datamaps.github.io/) and [d3.js](https://d3js.org/) to build the map.
@@ -23,9 +23,9 @@ I saw [this](https://www.codementor.io/johnnyb/the-map-of-my-mentees-7q7aqrktp) 
   - **Step 1**
 
     Run the following command replacing the url with your own. 
-    
+    Please, use Python <= 3.9, because some libraries are incompatible with newer versions.
     ```
-    python3 main.py https://github.com/kivy/plyer 3 0 1
+    python3 main.py https://github.com/kivy/plyer 3 1 0
     ```
     Arguments:
     
@@ -53,12 +53,12 @@ I saw [this](https://www.codementor.io/johnnyb/the-map-of-my-mentees-7q7aqrktp) 
 
       - **use_api** (Binary): Choose whether you want to use the GitHub's user API to get the user data or use the scraper. To use the api enter `1` else `0`
       ```
-      python3 main.py http://github.com/kivy/plyer 3 0
+      python3 main.py http://github.com/kivy/plyer 3 1
       ```
       
       - **read_from_stargazers_json** (Binary): If there is a `stargazers.json` file aleady present with list of users you want to plot then you can skip scraping of users from the project's stargazer's page e.g `http://github.com/kivy/plyer/stargazers?page=2` by setting the value of this argument to 1.
       ```
-      python3 main.py http://github.com/kivy/plyer 3 0 1
+      python3 main.py http://github.com/kivy/plyer 3 1 0
       ```
 
   - **Step 2**

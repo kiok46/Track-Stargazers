@@ -1,8 +1,9 @@
 import urllib.request
+import requests
 from bs4 import BeautifulSoup
 import json
-import geocoder
 import threading
+from geopy.geocoders import Nominatim
 
 
 class StarThread(threading.Thread):
@@ -19,9 +20,9 @@ class StarThread(threading.Thread):
         self.use_api = use_api
 
     def run(self):
-        print ("Starting " + self.name)
+        print("Starting " + self.name)
         store_in_json(self.stargazers, self.data_file, self.use_api)
-        print ("Exiting " + self.name)
+        print("Exiting " + self.name)
 
 
 def scrape_stargazers(url):
@@ -31,17 +32,17 @@ def scrape_stargazers(url):
     e.g: http://github.com/kivy/plyer/stargazers?page=1
          http://github.com/kivy/plyer/stargazers?page=2
 
-    returns the untire valud users list.
+    returns the entire valid users list.
 
     """
     page_count = 1
     stargazers = []
     
-    while page_count>0:
+    while page_count > 0:
         url_ = url.format(page_count)
         r = urllib.request.urlopen(url_).read()
         soup = BeautifulSoup(r, "lxml")
-        follow = soup.find_all("h3", class_="follow-list-name")
+        follow = soup.find_all("h3", class_="h4 mb-1")
         if follow:
             for human in follow:
                 h = human.a['href'].split("/")[1]
@@ -59,9 +60,13 @@ def get_user_profile(user_name):
     Use the GitHub's user API to get the user location and id.
     """
     url_ = "https://api.github.com/users/{}".format(user_name)
-    r = urllib.request.urlopen(url_).read()
-    result = json.loads(r)
-    return result['location'], result['id']
+    headers = {
+        'Authorization': f'token {"YOUR TOKEN"}',
+        'Accept': 'application/vnd.github.v3+json',
+    }
+    r = requests.get(url_, headers=headers)
+    result = r.json()
+    return result['location'], result['login']
 
 
 # Scraper for user Profile.
@@ -124,28 +129,41 @@ def chunk_stargazers(seq, num):
 
 def store_in_json(stargazers, data_file, use_api):
     """
-    Store the user data in a a json file in folder jsons/.
+    Store the user data in a json file in folder jsons/.
 
     eg: jsons/data_1.json
     """
+    geolocator = Nominatim(user_agent="geoapiExercises")
+
+    def get_country_by_location(location):
+        try:
+            location = geolocator.geocode(location, language='en')
+            return location.address.split(",")[-1].strip()
+        except:
+            return "Location not found"
+
     for user in stargazers:
         if use_api:
-            user_country, user_id = get_user_profile(user)
+            user_location, user_id = get_user_profile(user)
         else:
             url = "https://github.com/{}".format(user)
-            user_country, user_id = scrape_profile(url)
+            user_location, user_id = scrape_profile(url)
 
-        if user_country == "N/A":
+        if user_location is None:
             # If no information is available about the user
             # location, just ignore it.
             pass
         else:
-            user_country = geocoder.google(user_country).country_long
+            user_country = get_country_by_location(user_location)
             if user_country:
-                #user_country, user_id = get_user_profile(url)
+                # user_country, user_id = get_user_profile(url)
 
-                user_ = {"user": user_id, 
-                         "country": user_country}
+                # if location name has typos, the country won't be identified,
+                # so imho it's a good idea to keep the location in json
+                # for a possible manual check
+                user_ = {"user": user_id,
+                         "country": user_country,
+                         "location": user_location}
 
                 try:
                     outfile = open('jsons/{}.json'.format(data_file), 'r')
@@ -156,7 +174,7 @@ def store_in_json(stargazers, data_file, use_api):
                     with open('jsons/{}.json'.format(data_file), 'w') as outfile:
                         json.dump(data, outfile, indent=4)
 
-                    print ("Added user from " + user_country)
+                    print("Added user from " + user_country)
 
                     outfile.close()
                 except:
@@ -170,16 +188,15 @@ def store_in_json(stargazers, data_file, use_api):
 
                     outfile.close()
 
+    # map_data = {"users": users}
 
-    #map_data = {"users": users}
+    print("Part 2/2 complete.")
+    print("Done. Check the data.json file.")
 
-    print ("Part 2/2 complete.")
-    print ("Done. Check the data.json file.")
-
-    #with open('jsons/{}.json'.format(data_file), 'w') as outfile:
+    # with open('jsons/{}.json'.format(data_file), 'w') as outfile:
     #    json.dump(map_data, outfile, indent=4)
 
-    #outfile.close()
+    # outfile.close()
 
 
 if __name__ == "__main__":
@@ -209,7 +226,7 @@ if __name__ == "__main__":
         stargazers_file.close()
     
     else:
-        print ("Collecting users ...")
+        print("Collecting users ...")
         stargazers = scrape_stargazers(url+star)
         with open('stargazers.json', 'w') as outfile:
             json.dump(stargazers, outfile, indent=4)
@@ -217,17 +234,20 @@ if __name__ == "__main__":
 
     chunked_data = chunk_stargazers(stargazers, number_of_threads)
     if chunked_data:
-        print ("Made {} chunks of entire user set.".format(number_of_threads))
-        print ("Part 1/2 complete.")
-        print ("Working on collecting user data ....")
+        print("Made {} chunks of entire user set.".format(number_of_threads))
+        print("Part 1/2 complete.")
+        print("Working on collecting user data ....")
 
     thread_list = {}
-    print ("Creating {} threads ...".format(number_of_threads))
-    for i in range(number_of_threads):
-        thread_list["thread{}".format(i)] = StarThread(i, "Thread-{}".format(i),
-                                                       chunked_data[i], "data_{}".format(i),
-                                                       use_api)
-        thread_list["thread{}".format(i)].start()
-
-    for i in range(number_of_threads):
-        thread_list["thread{}".format(i)].join()
+    print("Creating {} threads ...".format(number_of_threads))
+    # threading have no sense when the unauthorized limit of github requests
+    # is 10 per hour. Dunno if it works with auth token
+    store_in_json(stargazers, 'data_0', use_api)
+    # for i in range(number_of_threads, 1):
+    #     thread_list["thread{}".format(i)] = StarThread(i, "Thread-{}".format(i),
+    #                                                    chunked_data[i], "data_{}".format(i),
+    #                                                    use_api)
+    #     thread_list["thread{}".format(i)].start()
+    #
+    # for i in range(number_of_threads, 1):
+    #     thread_list["thread{}".format(i)].join()
