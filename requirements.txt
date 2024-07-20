@@ -1,2 +1,4 @@
 BeautifulSoup4==4.6.0
 geocoder==1.22.5
+requests~=2.31.0
+geopy~=2.3.0

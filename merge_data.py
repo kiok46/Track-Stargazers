@@ -45,7 +45,7 @@ def main(number_of_files):
     month = str(datetime.datetime.now().month)
     day = str(datetime.datetime.now().day)
 
-    with open("data/stargazers.js", "w") as js_file:
+    with open("data/stargazers.js", "w", encoding='utf-8') as js_file:
         js_file.write("var DATA = { users:")
         js_file.write(str(all_users))
         js_file.write(", created_at: new Date(%s, %s, %s) };" % (year, month, day))
@@ -62,5 +62,5 @@ if __name__ == "__main__":
 
     """
     import sys
-    number_of_files = int(sys.argv[1])
+    number_of_files = int(1)
     main(number_of_files)
